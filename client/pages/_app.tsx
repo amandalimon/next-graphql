@@ -1,14 +1,20 @@
 import { AppProps } from 'next/app'
+import { QueryClientProvider, QueryClient } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import 'semantic-ui-css/semantic.min.css'
 import '../globals.css'
-
 import CartProvider from '@store/Cart'
+
+const client = new QueryClient()
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <CartProvider>
-      <Component {...pageProps} />
-    </CartProvider>
+    <QueryClientProvider client={client}>
+      <CartProvider>
+        <Component {...pageProps} />
+      </CartProvider>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   )
 }
 

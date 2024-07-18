@@ -3,26 +3,26 @@ import { gql, useQuery } from '@apollo/client'
 import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
 import { Card } from 'semantic-ui-react'
+import { useGetProductsQuery } from 'service/graphql'
 
 const avocadoFragment = `
   id
-  image
-  name
-  createdAt
-  sku
+  title
   price
-  attributes {
-    description
-    taste
-    shape
-    hardiness
+  description
+  category {
+    id
+    name
   }
+  images
+  creationAt
+  updatedAt
 `
 
 const useAvocados = () => {
   const query = gql`
-    query {
-      avos {
+    query getProducts{
+      products {
         ${avocadoFragment}
       }
     }
@@ -32,7 +32,7 @@ const useAvocados = () => {
 
 const HomePage = () => {
 
-  const { data, loading } = useAvocados()
+  const { data, loading } = useGetProductsQuery()
 
   console.log({ data, loading })
 

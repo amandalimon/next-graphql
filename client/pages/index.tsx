@@ -1,40 +1,47 @@
 import React from 'react'
-import { gql, useQuery } from '@apollo/client'
 import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
 import { Card } from 'semantic-ui-react'
-import { useGetProductsQuery } from 'service/graphql'
 
-const avocadoFragment = `
-  id
-  title
-  price
-  description
-  category {
-    id
-    name
-  }
-  images
-  creationAt
-  updatedAt
-`
+import { GetProductsDocument, GetProductsQuery, Product } from 'service/graphql'
+import { useQuery } from '@apollo/client'
 
-const useAvocados = () => {
-  const query = gql`
-    query getProducts{
-      products {
-        ${avocadoFragment}
-      }
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import client from '../service/client'
+
+
+export const getStaticProps: GetStaticProps<{ products: GetProductsQuery['products'] }> = async () => {
+  try {
+    const response = await client.query<GetProductsQuery>({
+      query: GetProductsDocument
+    });
+
+    if (!response || !response.data || !response.data.products) {
+      throw new Error('Failed to request');
     }
-  `
-  return useQuery(query)
-}
 
-const HomePage = () => {
+    const products = response.data.products;
 
-  const { data, loading } = useGetProductsQuery()
+    return {
+      props: {
+        products,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      props: {
+        products: [],
+      },
+    };
+  }
+};
 
-  console.log({ data, loading })
+const HomePage = ({ products }: InferGetStaticPropsType<typeof getStaticProps>) => {
+
+  const { data, loading } = useQuery(GetProductsDocument)
+
+  console.log({ products })
 
   return (
     <Layout title="Home">

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.0",
-    "axios": "^0.24.0",
+    "axios": "^1.7.7",
     "@apollo/client": "^3.5.5",
     "next": "12.x.x",
     "postcss": "^8.4.4",
